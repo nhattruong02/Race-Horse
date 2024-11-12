@@ -13,14 +13,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] Text remainDistanceText;
     [SerializeField] List<Text> nameHorse;
     [SerializeField] List<Horse> horses;
+    [SerializeField] Vector3 cameraFinished;
     public Camera mainCamera;
     int remainDistance;
     private static GameManager _instance;
     private float totalRace;
     public static GameManager Instance => _instance;
-    [SerializeField] AudioSource audio;
+    [SerializeField] AudioSource audioRace;
     public int RemainDistance { get => remainDistance; private set => remainDistance = value; }
-
     private Horse firstHorse;
 
     private void Awake()
@@ -29,9 +29,9 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        audio = GetComponent<AudioSource>();
+        audioRace = GetComponent<AudioSource>();
         totalRace = endPosition.position.z - startPosition.position.z;
-        audio.Play();
+        audioRace.Play();
     }
 
     // Update is called once per frame
@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     private void sortingRanking()
     {
+
         var listHorse = horses.OrderByDescending(o => o.transform.position.z).ToList();
         Vector3 currentPositionCamera = mainCamera.transform.position;
         firstHorse = listHorse[0];
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
         if (remainDistance >= 0f)
         {
             remainDistanceText.text = firstHorse.Name + ":" + remainDistance + Common.Meter;
-            audio.Stop();
+            audioRace.Stop();
         }
         else
         {
@@ -70,17 +71,21 @@ public class GameManager : MonoBehaviour
 
     private void slowDownCamera()
     {
-        if (remainDistance <= 100)
+        if (remainDistance <= 20)
         {
-            Time.timeScale = 0.5f;
+            Time.timeScale = 0.2f;
+            cameraFinished = new Vector3(cameraFinished.x, cameraFinished.y, firstHorse.transform.position.z);
+            Vector3 mainCamera = Camera.main.transform.position;
+            Camera.main.transform.position = Vector3.Lerp(mainCamera, cameraFinished, 1);
         }
     }
 
     public void displayRanking(List<Horse> horses)
     {
-        for (int i = 0; i < horses.Count; i++)
+        for (int i = horses.Count - 1; i >= 0; i--)
         {
             nameHorse[i].text = horses[i].Name;
         }
+
     }
 }

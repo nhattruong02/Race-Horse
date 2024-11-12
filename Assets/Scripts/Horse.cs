@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Horse : MonoBehaviour
 {
-    [SerializeField] string name;
+    [SerializeField] new string name;
     [SerializeField] float maxSpeedRD;
     [SerializeField] float minSpeedRD;
     [SerializeField] Rigidbody rb;
@@ -12,8 +12,10 @@ public class Horse : MonoBehaviour
     [SerializeField] float speedDown;
     private Vector3 movement;
     private float speed;
+    bool isFinished;
 
     public string Name { get => name; private set => name = value; }
+    public bool IsFinished { get => isFinished; set => isFinished = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -26,23 +28,43 @@ public class Horse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = new Vector3(0,0, movement.z);
+        rb.velocity = new Vector3(0, 0, movement.z);
     }
+
     private void FixedUpdate()
     {
-        if (GameManager.Instance.RemainDistance % 100 == 0 && GameManager.Instance.RemainDistance >= 0)
+        if (!isFinished)
         {
+            if (GameManager.Instance.RemainDistance % 100 == 0 && GameManager.Instance.RemainDistance >= 0)
+            {
+                speed = Random.Range(minSpeedRD, maxSpeedRD);
 
-            speed = Random.Range(minSpeedRD, maxSpeedRD);
+            }
         }
         rb.velocity = movement * speed;
     }
-    private void OnTriggerExit(Collider horse)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (horse.CompareTag(Common.Finish))
+        if (other.CompareTag(Common.Finish))
         {
-            speed = 0;
-            animator.SetTrigger(Common.Run);
+            isFinished = true;
+        }
+        StartCoroutine(finishedRace());
+    }
+
+    IEnumerator finishedRace()
+    {
+        yield return new WaitForSeconds(1);
+        while (speed >= 0)
+        {
+            speed -= speedDown;
+            if (speed <= 0.2f)
+            {
+                animator.SetTrigger(Common.Run);
+                break;
+            }
         }
     }
+
 }

@@ -323,8 +323,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.039234784, y: 0.10193918, z: 0.079111226}
-  m_Center: {x: -0.0007533971, y: -0.007365505, z: 0.038973715}
+  m_Size: {x: 0.022942314, y: 0.08825366, z: 0.060893875}
+  m_Center: {x: 0.0002362442, y: -0.007894684, z: 0.03345415}
 --- !u!1 &2637677515839420596
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,13 +552,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a681e5d52019b45aa4ee0d6fe5f3d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Ngua so 2
-  maxSpeedRD: 20
-  minSpeedRD: 100
+  name: Ngua so 1
+  maxSpeedRD: 80
+  minSpeedRD: 75
   rb: {fileID: 2201893526892283942}
   animator: {fileID: 2016442811602619291}
-  speedDown: 0
-  firstCollider: {fileID: 0}
+  speedDown: 1
 --- !u!54 &2201893526892283942
 Rigidbody:
   m_ObjectHideFlags: 0
